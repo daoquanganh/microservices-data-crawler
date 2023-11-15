@@ -15,6 +15,7 @@ export class AppController {
 
   @EventPattern('crawlData')
   async storeData(data: DataDto[]) {
+    console.log(data)
     return await this.appService.create(data)
   }
 }
