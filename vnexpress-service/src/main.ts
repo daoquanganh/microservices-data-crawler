@@ -1,10 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { MicroserviceOptions, RpcException, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
+import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(new ValidationPipe({
+    transform: true,
+    whitelist:true, 
+    forbidNonWhitelisted:true,
+    forbidUnknownValues:true,
+    disableErrorMessages:true,
+    exceptionFactory: (error) => {
+      return new RpcException(error)
+    }
+  }),
+)
 
   const configService = app.get<ConfigService>(ConfigService)
   app.connectMicroservice<MicroserviceOptions>({
@@ -15,7 +28,7 @@ async function bootstrap() {
         queueOptions: {
         durable: false
         }}
-      });
+      },{ inheritAppConfig: true});
   app.startAllMicroservices()
   app.init()
 }

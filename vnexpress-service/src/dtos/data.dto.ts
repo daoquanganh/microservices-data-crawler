@@ -5,9 +5,6 @@ export class ArticleDto {
     author: string
 
     @IsNotEmpty()
-    test: string
-    
-    @IsNotEmpty()
     title: string
 
     @IsNotEmpty()
@@ -17,7 +14,7 @@ export class ArticleDto {
     date: string
 
     @IsNotEmpty()
-    website: string
+    source: 'Vnexpress'
 
     @IsNotEmpty()
     content: string

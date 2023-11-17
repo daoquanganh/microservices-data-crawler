@@ -1,12 +1,17 @@
-import { IsNotEmpty } from "class-validator"
+import { IsNotEmpty, Validate } from "class-validator"
+// import { IsUnique } from "src/validation/unique.validation"
 
-export class DataDto {
+export class ArticleDto {
     @IsNotEmpty()
     author: string
 
     @IsNotEmpty()
+    test: string
+    
+    @IsNotEmpty()
     title: string
 
+    // @IsUnique()
     @IsNotEmpty()
     detailUrl: string
     

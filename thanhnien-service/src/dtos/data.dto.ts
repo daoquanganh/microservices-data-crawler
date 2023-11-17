@@ -5,19 +5,19 @@ export class ArticleDto {
     author: string
 
     @IsNotEmpty()
-    test: string
-    
-    @IsNotEmpty()
     title: string
 
     @IsNotEmpty()
     detailUrl: string
+
+    @IsNotEmpty()
+    test: string
     
     @IsNotEmpty()
     date: string
 
     @IsNotEmpty()
-    website: string
+    source: 'Thanhnien'
 
     @IsNotEmpty()
     content: string

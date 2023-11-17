@@ -1,9 +1,8 @@
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import axios from 'axios';
-import * as cheerio from 'cheerio'
-import { ClientProxy, EventPattern, MessagePattern } from '@nestjs/microservices';
+import { ClientProxy, MessagePattern, RpcException } from '@nestjs/microservices';
+import { ArticleDto } from './dtos/data.dto';
 
 @Controller()
 export class AppController {
@@ -13,15 +12,18 @@ export class AppController {
     }
 
   @Cron(CronExpression.EVERY_5_HOURS)
-  async sendData() {
-    const data = await this.appService.crawl()
-    this.client.emit('crawlData', data)
+  async sendData(): Promise<ArticleDto[]> {
+    try {
+      const data = await this.appService.crawl()
+      this.client.emit<ArticleDto[]>('crawlData', data)
+      return data
+    } catch (e) {throw new RpcException(e)}
 
   }
 
   @MessagePattern('vnexpress')
-  async getData() {
-    const data = await this.appService.crawl()
+  async getData(): Promise<ArticleDto[]> {
+    const data = await this.appService.crawl().catch((e)=> {throw new RpcException(e)})
     return data
   }
 }

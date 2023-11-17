@@ -1,11 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller} from '@nestjs/common';
 import { AppService } from './app.service';
-import { EventPattern } from '@nestjs/microservices';
-import { DataDto } from './dtos/data.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Article } from './entities/article.entity';
-import { Repository } from 'typeorm';
-import { subscribe } from 'diagnostics_channel';
+import { EventPattern, Payload } from '@nestjs/microservices';
+import { ArticleDto } from './dtos/data.dto';
 
 @Controller()
 export class AppController {
@@ -14,8 +10,7 @@ export class AppController {
     ) {}
 
   @EventPattern('crawlData')
-  async storeData(data: DataDto[]) {
-    console.log(data)
+  async storeData(data: ArticleDto[]) {
     return await this.appService.create(data)
   }
 }
