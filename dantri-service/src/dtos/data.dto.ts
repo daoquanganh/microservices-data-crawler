@@ -1,12 +1,9 @@
 import { IsNotEmpty } from "class-validator"
 
-export class ArticleDto {
+export class DataDto {
     @IsNotEmpty()
     author: string
 
-    @IsNotEmpty()
-    test: string
-    
     @IsNotEmpty()
     title: string
 
@@ -17,7 +14,7 @@ export class ArticleDto {
     date: string
 
     @IsNotEmpty()
-    website: string
+    source: 'Dantri'
 
     @IsNotEmpty()
     content: string

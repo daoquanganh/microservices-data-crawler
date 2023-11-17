@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import axios from 'axios';
 import * as cheerio from 'cheerio'
+import { ArticleDto } from './dtos/data.dto';
 
 
 @Injectable()
@@ -9,12 +10,12 @@ export class AppService {
 
   constructor(@Inject('CRAWL_SERVICE') private readonly client: ClientProxy) {}
   
-  async crawl() {
+  async crawl(): Promise<ArticleDto[]> {
     try {
       const url = 'https://vnexpress.net/'
       const fetched = await axios(url)
       const $ = cheerio.load(fetched.data, {xml:true})
-      let data =[]
+      let data : ArticleDto[] = []
       for (const el of $('.item-news')) {
           const title = $(el).find('.title-news a').text()
           const regex= /[!-\/:-@[-`{-~]/
@@ -46,7 +47,7 @@ export class AppService {
       console.log(data)
       return data
   } catch(e) {
-      console.log(e)
+    console.log(e)
     }
   }
 }

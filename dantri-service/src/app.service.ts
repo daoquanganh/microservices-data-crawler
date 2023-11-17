@@ -10,11 +10,13 @@ export class AppService {
             const $ = cheerio.load(fetched.data, {xml:true});
             let data =[]
             for (const el of $('.article-item')) {
+                if (data.length >= 15) break
                 const title = $(el).find('.article-title').text()
                 const regex= /[!-\/:-@[-`{-~]/
                 if ( !(regex.test(title)) && title!='') {
-                    const detailUrl = $(el).find('.article-title a').attr('href')
-                    const details = await axios(url+detailUrl)
+                    let detailUrl = $(el).find('.article-title a').attr('href')
+                    detailUrl = url + detailUrl
+                    const details = await axios(detailUrl)
                     const c = cheerio.load(details.data)
                     let date =  c('.author-time').text() !== '' ? c('.author-time').text() : c('time').text()
                     date = date.replaceAll('\n', '').trim()
