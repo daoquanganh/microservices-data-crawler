@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { MySQLConfigService } from './config/mysql.config';
 import { Article } from './entities/article.entity';
+import { IsUniqueConstraint } from './validation/unique.validation';
 
 @Module({
   imports: [
@@ -19,6 +20,6 @@ import { Article } from './entities/article.entity';
     TypeOrmModule.forFeature([Article])
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,IsUniqueConstraint],
 })
 export class AppModule {}

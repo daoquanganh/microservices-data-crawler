@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Article } from './entities/article.entity';
 import { Repository } from 'typeorm';
-import { ArticleDto } from './dtos/data.dto';
+import { ArticleDto } from './dtos/article.dto';
 import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
@@ -10,12 +10,12 @@ export class AppService {
   constructor(@InjectRepository(Article) private articleRepo: Repository<Article>
   ) {}
   async create(data: ArticleDto[]) {
-    data.forEach(async (article: ArticleDto) => {
-      await this.articleRepo.save(article).catch((e)=> {
-        console.log(e)
+    if (data) {
+      data.forEach(async (article: ArticleDto) => {
+        await this.articleRepo.save(article)
       })
-    })
-    // console.log(data)
-    return data
+      return data
+    }
+
   }
 }

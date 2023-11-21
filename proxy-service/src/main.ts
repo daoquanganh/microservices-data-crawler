@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { RpcExceptionToHttpExceptionFilter } from './filters/rpc-exception.filter';
-import { error } from 'console';
 import { RpcException } from '@nestjs/microservices';
 
 async function bootstrap() {
@@ -11,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors()
   app.useGlobalFilters(new RpcExceptionToHttpExceptionFilter())
-  app.useGlobalPipes( new ValidationPipe({
+  app.useGlobalPipes(new ValidationPipe({
     transform: true,
     whitelist:true, 
     forbidNonWhitelisted:true,

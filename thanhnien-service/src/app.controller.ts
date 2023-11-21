@@ -12,7 +12,7 @@ export class AppController {
   @Cron(CronExpression.EVERY_MINUTE)
   async sendData() {
     const data = await this.appService.crawl()
-    this.client.emit<ArticleDto[]>('crawlData', data)
+    this.client.emit('crawlData', {data})
   }
 
   @MessagePattern('thanhnien')
