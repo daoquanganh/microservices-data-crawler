@@ -1,16 +1,17 @@
-import { Controller} from '@nestjs/common';
+import { Controller, UsePipes} from '@nestjs/common';
 import { AppService } from './app.service';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { ArticleDto } from './dtos/data.dto';
+import { PayloadDto } from './dtos/payload.dto';
+import { PayloadValidationPipe } from './validation/payload.pipe';
 
 @Controller()
 export class AppController {
   constructor(
     private readonly appService: AppService,
     ) {}
-
-  @EventPattern('crawlData')
-  async storeData(data: ArticleDto[]) {
-    return await this.appService.create(data)
+  @UsePipes(PayloadValidationPipe)
+  @EventPattern('crawlData') 
+  async storeData(@Payload() payload: PayloadDto) {
+    await this.appService.create(payload.data)
   }
 }

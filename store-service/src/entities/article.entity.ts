@@ -12,7 +12,7 @@ export class Article {
     title: string;
 
     @IsNotEmpty()
-    @Column({unique:true})
+    @Column()
     detailUrl: string
 
     @IsNotEmpty()

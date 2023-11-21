@@ -3,23 +3,13 @@ import { AppModule } from './app.module';
 import { MicroserviceOptions, RpcException, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { useContainer } from 'class-validator';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe({
-    transform: true,
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    forbidUnknownValues: true,
-    disableErrorMessages: true,
-    validateCustomDecorators: true,
-    exceptionFactory: (errors) => {
-      return new RpcException(errors);
-    }
-  }))
-
+  app.useGlobalPipes(new ValidationPipe());
   const configService = app.get<ConfigService>(ConfigService)
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
@@ -32,12 +22,10 @@ async function bootstrap() {
     },
   },{inheritAppConfig: true},
   );
-
-  useContainer(app.select(AppModule), { fallbackOnErrors: true })
+  useContainer(app.select(AppModule), { fallbackOnErrors:true})
 
   app.startAllMicroservices()
-  app.listen(3001)
-
+  app.init()
 
 }
 bootstrap();

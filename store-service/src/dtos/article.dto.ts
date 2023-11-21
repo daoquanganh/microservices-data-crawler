@@ -1,11 +1,9 @@
 import { IsNotEmpty } from "class-validator"
+import { IsUnique } from "src/validation/unique.validation"
 
 export class ArticleDto {
     @IsNotEmpty()
     author: string
-
-    @IsNotEmpty()
-    test: string
     
     @IsNotEmpty()
     title: string
@@ -17,7 +15,7 @@ export class ArticleDto {
     date: string
 
     @IsNotEmpty()
-    website: string
+    source: string
 
     @IsNotEmpty()
     content: string

@@ -10,10 +10,10 @@ export class AppController {
   private readonly appService: AppService
   ) {}
 
-@Cron(CronExpression.EVERY_5_HOURS)
+@Cron(CronExpression.EVERY_MINUTE)
 async sendData(): Promise<DataDto[]> {
   const data = await this.appService.crawl()
-  this.client.emit('crawlData', data)
+  this.client.emit('crawlData', {data})
   return data
 }
 
