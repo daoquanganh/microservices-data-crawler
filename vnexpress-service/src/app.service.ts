@@ -1,14 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { ClientProxy, RpcException } from '@nestjs/microservices';
 import axios from 'axios';
 import * as cheerio from 'cheerio'
 import { ArticleDto } from './dtos/data.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Duplicate } from './entities/duplicate.entity';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
 export class AppService {
 
-  constructor(@Inject('CRAWL_SERVICE') private readonly client: ClientProxy) {}
+  constructor(@InjectRepository(Duplicate) private readonly duplicateRepo: Repository<Duplicate>) {}
   
   async crawl(): Promise<ArticleDto[]> {
     try {
@@ -44,11 +47,29 @@ export class AppService {
               content=''
           }            
       }
+      data = await this.duplicateCheck(data)
       console.log(data)
       return data
   } catch(e) {
     console.log(e)
     }
   }
+
+  async duplicateCheck(articles: ArticleDto[] ): Promise<ArticleDto[]> {
+    try {
+      const duplicates = await this.duplicateRepo.find({select:['detailUrl']})
+      if (duplicates) {
+          let urls = duplicates.map(article=> article.detailUrl)
+          articles = articles.filter((article) => {
+              return !urls.includes(article.detailUrl)
+          })
+      }
+      const results = await this.duplicateRepo.save(articles)
+      return results.map(({id,...rest}) => rest)    
+    } catch (e) {
+      console.log(e)
+      throw new RpcException(e)
+    }
+}
 }
 

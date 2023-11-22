@@ -16,10 +16,7 @@ export class PayloadValidationPipe implements PipeTransform {
     constructor(@InjectRepository(Article) private readonly articleRepo: Repository<Article>) {}
     async transform(value: PayloadDto) {
         const articles = await this.articleRepo.find({select:['detailUrl']})
-        let urls = []
-        articles.forEach((article) => {
-            urls.push(article.detailUrl)
-        })
+        let urls = articles.map(article=> article.detailUrl)
         value.data = value.data.filter((article) => {
             return !urls.includes(article.detailUrl)
         })

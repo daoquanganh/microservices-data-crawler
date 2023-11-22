@@ -1,9 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Article } from './entities/article.entity';
 import { Repository } from 'typeorm';
 import { ArticleDto } from './dtos/article.dto';
-import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class AppService {
@@ -15,7 +14,7 @@ export class AppService {
         await this.articleRepo.save(article)
       })
       return data
-    }
+    } else throw new NotFoundException()
 
   }
 }

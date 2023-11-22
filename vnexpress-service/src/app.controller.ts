@@ -11,6 +11,7 @@ export class AppController {
     private readonly appService: AppService) {
     }
 
+  //endpoint for crawling and sending articles with schedule
   @Cron(CronExpression.EVERY_MINUTE)
   async sendData() {
     try {
@@ -20,8 +21,12 @@ export class AppController {
 
   }
 
+  //endpoint for receiving message and return data to proxy
   @MessagePattern('vnexpress')
   async getData(): Promise<ArticleDto[]> {
-    return await this.appService.crawl().catch((e)=> {throw new HttpException(e, HttpStatus.BAD_REQUEST)})
+    return await this.appService.crawl().catch((e)=> {
+      console.log(e)
+      throw new HttpException(e, HttpStatus.BAD_REQUEST)
+    })
   }
 }

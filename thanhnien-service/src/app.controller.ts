@@ -9,12 +9,15 @@ export class AppController {
     private readonly appService: AppService
     ) {}
 
+
+  //endpoint for crawling and sending articles with schedule
   @Cron(CronExpression.EVERY_MINUTE)
   async sendData() {
     const data = await this.appService.crawl()
     this.client.emit('crawlData', {data})
   }
 
+  //endpoint for receiving message and return data to proxy
   @MessagePattern('thanhnien')
   async getData(): Promise<ArticleDto[]> {
     const data = await this.appService.crawl()

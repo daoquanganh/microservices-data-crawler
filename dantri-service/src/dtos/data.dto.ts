@@ -1,6 +1,6 @@
 import { IsNotEmpty } from "class-validator"
 
-export class DataDto {
+export class ArticleDto {
     @IsNotEmpty()
     author: string
 

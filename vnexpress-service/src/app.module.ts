@@ -4,6 +4,9 @@ import { AppService } from './app.service';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MySQLConfigService } from './config/mysql.config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Duplicate } from './entities/duplicate.entity';
 
 @Module({
   imports: [
@@ -22,6 +25,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     }]),
+    TypeOrmModule.forRootAsync({
+      useClass: MySQLConfigService,
+      inject: [MySQLConfigService]
+    }),
+    TypeOrmModule.forFeature([Duplicate])
+    
   ],
   controllers: [AppController],
   providers: [AppService],

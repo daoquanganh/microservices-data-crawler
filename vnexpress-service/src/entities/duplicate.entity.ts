@@ -2,7 +2,7 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 
 @Entity()
-export class Article {
+export class Duplicate {
     
     @PrimaryGeneratedColumn()
     id: string
@@ -12,16 +12,12 @@ export class Article {
     title: string;
 
     @IsNotEmpty()
-    @Column({unique:true})
+    @Column()
     detailUrl: string
 
     @IsNotEmpty()
     @Column()
     author: string
-
-    @IsNotEmpty()
-    @Column({type: 'longtext'})
-    content: string
 
     @IsNotEmpty()
     @Column()
