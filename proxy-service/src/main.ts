@@ -1,9 +1,8 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
-import { RpcExceptionToHttpExceptionFilter } from './filters/rpc-exception.filter';
-import { RpcException } from '@nestjs/microservices';
+import { ClientProxy } from '@nestjs/microservices';
 
 async function bootstrap() {
   

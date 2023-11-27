@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, RpcException, Transport } from '@nestjs/microservices';
+import { ClientProxy, MicroserviceOptions, RpcException, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { BadRequestException, ValidationError, ValidationPipe } from '@nestjs/common';
 import { ExceptionFilter } from 'filters/rpc-exception.filter';
@@ -25,11 +25,13 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-        urls: [configService.get<string>('AMQP_URI')],
+        urls: [configService.get<string>('AMQP_PROXY_URI')],
         queue: configService.get<string>('RMQ_QUEUE'),
         queueOptions: {
-        durable: false
-        }}
+          durable: false,
+          retryAttempts: 3
+        },
+      }
       },{ inheritAppConfig: true});
   app.startAllMicroservices()
   app.init()

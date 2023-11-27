@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ScheduleModule } from '@nestjs/schedule';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+import { ClientProxyFactory, ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MySQLConfigService } from './config/mysql.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -30,7 +30,6 @@ import { Duplicate } from './entities/duplicate.entity';
       inject: [MySQLConfigService]
     }),
     TypeOrmModule.forFeature([Duplicate])
-    
   ],
   controllers: [AppController],
   providers: [AppService],

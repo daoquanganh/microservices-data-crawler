@@ -47,7 +47,6 @@ export class AppService {
               content=''
           }            
       }
-      data = await this.duplicateCheck(data)
       console.log(data)
       return data
   } catch(e) {

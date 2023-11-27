@@ -12,10 +12,11 @@ export class AppController {
     }
 
   //endpoint for crawling and sending articles with schedule
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   async sendData() {
     try {
-      const data = await this.appService.crawl()
+      let data = await this.appService.crawl()
+      data = await this.appService.duplicateCheck(data)
       this.client.emit('crawlData', {data})
     } catch (e) {throw new HttpException(e, HttpStatus.BAD_REQUEST)}
 
