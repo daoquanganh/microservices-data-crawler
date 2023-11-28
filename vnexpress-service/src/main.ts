@@ -26,10 +26,12 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
         urls: [configService.get<string>('AMQP_PROXY_URI')],
-        queue: configService.get<string>('RMQ_QUEUE'),
+        queue: configService.get<string>('VNEXPRESS_QUEUE'),
         queueOptions: {
           durable: false,
-          retryAttempts: 3
+          arguments: {
+            'x-message-ttl': 5000,
+          },
         },
       }
       },{ inheritAppConfig: true});

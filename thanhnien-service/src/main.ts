@@ -27,7 +27,9 @@ async function bootstrap() {
       queue: configService.get<string>('RMQ_QUEUE'),
       queueOptions: {
         durable: false,
-        retryAttempts: 3
+        arguments: {
+          'x-message-ttl': 5000,
+        },
       }
     }
   }, {inheritAppConfig: true});

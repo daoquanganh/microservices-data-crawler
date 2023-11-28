@@ -47,7 +47,6 @@ export class AppService {
               content=''
           }            
       }
-      console.log(data)
       return data
   } catch(e) {
     console.log(e)

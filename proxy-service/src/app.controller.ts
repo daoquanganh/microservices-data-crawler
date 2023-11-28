@@ -1,7 +1,5 @@
 import { BadRequestException, Controller, Get, Inject, Query, Redirect } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ModuleRef, Reflector } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { QueryDto } from './dtos/query.dto';
 import { ArticleDto } from './dtos/data.dto';
 
@@ -15,12 +13,7 @@ export class AppController {
   async sendRequest(@Query() query: QueryDto): Promise<Error | ArticleDto[]> {
     const source = query.source
     const articles = await this.appService.broadcast(source)
-    return articles
-  }
 
-  @Get('test')
-  test() {
-    const providers = Reflect.getMetadata('imports', AppModule)
-    console.log(providers)
+    return articles
   }
 }

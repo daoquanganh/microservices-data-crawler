@@ -17,7 +17,10 @@ export class RabbitMqService {
         ],
         queue: this.cf.get<string>(`RABBITMQ_${queue}_QUEUE`),
         queueOptions:{
-            durable: false
+            durable: false,
+            arguments: {
+              'x-message-ttl': 5000,
+            },
         }
       },
     };

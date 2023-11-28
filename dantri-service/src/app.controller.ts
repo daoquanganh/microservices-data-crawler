@@ -1,6 +1,6 @@
 import { Controller, Get, Inject } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ClientProxy, MessagePattern } from '@nestjs/microservices';
+import { ClientProxy, Ctx, MessagePattern, RmqContext } from '@nestjs/microservices';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ArticleDto } from './dtos/data.dto';
 
@@ -23,6 +23,7 @@ export class AppController {
   @MessagePattern('dantri')
   async getData(): Promise<ArticleDto[]> {
     const data = await this.appService.crawl()
+    
     return data
   }
 }

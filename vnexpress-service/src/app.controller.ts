@@ -1,8 +1,9 @@
 import { Controller, HttpException, HttpStatus, Inject } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
-import { ClientProxy, MessagePattern } from '@nestjs/microservices';
+import { ClientProxy, Ctx, MessagePattern, RmqContext } from '@nestjs/microservices';
 import { ArticleDto } from './dtos/data.dto';
+import { RabbitRPC, RabbitSubscribe } from '@golevelup/nestjs-rabbitmq';
 
 @Controller()
 export class AppController {
@@ -25,6 +26,8 @@ export class AppController {
   //endpoint for receiving message and return data to proxy
   @MessagePattern('vnexpress')
   async getData(): Promise<ArticleDto[]> {
+    console.log(123)
+    
     return await this.appService.crawl().catch((e)=> {
       console.log(e)
       throw new HttpException(e, HttpStatus.BAD_REQUEST)
