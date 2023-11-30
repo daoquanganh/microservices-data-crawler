@@ -1,5 +1,5 @@
 import { Type } from "class-transformer"
-import { IsNotEmpty, ValidateNested } from "class-validator"
+import { ValidateNested } from "class-validator"
 import { ArticleDto } from "./article.dto"
 
 export class PayloadDto {

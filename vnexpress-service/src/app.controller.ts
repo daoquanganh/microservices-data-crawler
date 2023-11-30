@@ -26,8 +26,6 @@ export class AppController {
   //endpoint for receiving message and return data to proxy
   @MessagePattern('vnexpress')
   async getData(): Promise<ArticleDto[]> {
-    console.log(123)
-    
     return await this.appService.crawl().catch((e)=> {
       console.log(e)
       throw new HttpException(e, HttpStatus.BAD_REQUEST)

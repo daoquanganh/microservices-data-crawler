@@ -1,4 +1,4 @@
-import { BadRequestException, Controller, Get, Inject, Query, Redirect } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { QueryDto } from './dtos/query.dto';
 import { ArticleDto } from './dtos/data.dto';
@@ -12,8 +12,6 @@ export class AppController {
   @Get('getArticle')
   async sendRequest(@Query() query: QueryDto): Promise<Error | ArticleDto[]> {
     const source = query.source
-    const articles = await this.appService.broadcast(source)
-
-    return articles
+    return await this.appService.broadcast(source)
   }
 }

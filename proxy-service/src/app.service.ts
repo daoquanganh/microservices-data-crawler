@@ -1,14 +1,13 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { ClientProxy, ClientProxyFactory, RpcException } from '@nestjs/microservices';
+import { ClientProxy, ClientProxyFactory } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, timeout } from 'rxjs';
 import { RabbitMqService } from './services/rabbitmq.service';
 
 @Injectable()
 export class AppService {
   microserviceClients: { [key:string]: ClientProxy } = {};
 
-  
   constructor(
     private readonly rmqService: RabbitMqService,
     private readonly configService: ConfigService
@@ -26,7 +25,7 @@ export class AppService {
       const client = this.microserviceClients[microservice];
       console.log(microservice)
       try {
-        articles = await firstValueFrom(client.send(event, {}))
+        articles = await firstValueFrom(client.send(event, {}).pipe(timeout(10000)))
         if (articles) return articles
 
       } catch (e) {

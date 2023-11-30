@@ -9,7 +9,6 @@ export class AppController {
     private readonly appService: AppService,
     ) {}
     
-  // @UsePipes(PayloadValidationPipe)
   @EventPattern('crawlData') 
   async storeData(@Payload() payload: PayloadDto) {
     await this.appService.create(payload.data)
