@@ -41,7 +41,6 @@ export class AppService {
             }
             let uniqueStringData = [...new Set(data.map((obj) => {return JSON.stringify(obj)}))]
             let uniqueData = uniqueStringData.map((obj)=> {return JSON.parse(obj)})
-            uniqueData = await this.duplicateCheck(uniqueData)
             console.log(uniqueData)
             return uniqueData
         } catch(e) {

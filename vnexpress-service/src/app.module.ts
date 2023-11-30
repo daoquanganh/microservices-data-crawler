@@ -30,7 +30,6 @@ import { Duplicate } from './entities/duplicate.entity';
       inject: [MySQLConfigService]
     }),
     TypeOrmModule.forFeature([Duplicate])
-    
   ],
   controllers: [AppController],
   providers: [AppService],

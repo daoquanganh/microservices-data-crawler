@@ -13,5 +13,6 @@ export class AppController {
   @EventPattern('crawlData') 
   async storeData(@Payload() payload: PayloadDto) {
     await this.appService.create(payload.data)
+    return payload
   }
 }

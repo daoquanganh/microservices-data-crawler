@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { ClientProxy, MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 
@@ -12,12 +12,16 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
-        urls: [configService.get<string>('AMQP_URI')],
-        queue: configService.get<string>('RMQ_QUEUE'),
-        queueOptions: {
-        durable: false
-        }}
-      });
+      urls: [configService.get<string>('AMQP_PROXY_URI')],
+      queue: configService.get<string>('RMQ_QUEUE'),
+      queueOptions: {
+        durable: false,
+        arguments: {
+          'x-message-ttl': 5000,
+        },
+      }
+    }
+  });
   app.startAllMicroservices()
   app.init()
 }

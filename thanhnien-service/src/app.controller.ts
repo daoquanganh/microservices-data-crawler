@@ -1,6 +1,6 @@
 import { Controller, Get, Inject, Post } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ClientProxy, MessagePattern } from '@nestjs/microservices';
+import { ClientProxy, Ctx, MessagePattern, RmqContext } from '@nestjs/microservices';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ArticleDto } from './dtos/data.dto';
 @Controller()
@@ -11,9 +11,10 @@ export class AppController {
 
 
   //endpoint for crawling and sending articles with schedule
-  @Cron(CronExpression.EVERY_MINUTE)
+  @Cron(CronExpression.EVERY_30_MINUTES)
   async sendData() {
-    const data = await this.appService.crawl()
+    let data = await this.appService.crawl()
+    data = await this.appService.duplicateCheck(data)
     this.client.emit('crawlData', {data})
   }
 
@@ -21,6 +22,7 @@ export class AppController {
   @MessagePattern('thanhnien')
   async getData(): Promise<ArticleDto[]> {
     const data = await this.appService.crawl()
+    
     return data
   }
 }
