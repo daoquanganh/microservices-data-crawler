@@ -4,13 +4,11 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
-import { CustomExceptionFilter } from './filters/rpc-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
-  app.useGlobalFilters(new CustomExceptionFilter())
   const configService = app.get<ConfigService>(ConfigService)
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
@@ -18,7 +16,7 @@ async function bootstrap() {
       urls: [configService.get<string>('AMQP_URI')],
       queue: configService.get<string>('RMQ_QUEUE'),
       queueOptions: {
-      durable: false,
+        durable: false,
       }
     },
   },{inheritAppConfig: true},

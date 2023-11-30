@@ -3,6 +3,7 @@ import { AppService } from './app.service';
 import { ClientProxy, Ctx, MessagePattern, RmqContext } from '@nestjs/microservices';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { ArticleDto } from './dtos/data.dto';
+import { timeout } from 'rxjs';
 
 @Controller()
 export class AppController {
@@ -11,7 +12,7 @@ export class AppController {
   ) {}
 
   //endpoint for crawling and sending articles with schedule
-  @Cron(CronExpression.EVERY_30_MINUTES)
+  @Cron(CronExpression.EVERY_MINUTE)
   async sendData(): Promise<ArticleDto[]> {
     let data = await this.appService.crawl()
     data = await this.appService.duplicateCheck(data)
@@ -22,8 +23,6 @@ export class AppController {
   //endpoint for receiving message and return data to proxy
   @MessagePattern('dantri')
   async getData(): Promise<ArticleDto[]> {
-    const data = await this.appService.crawl()
-    
-    return data
+    return await this.appService.crawl()
   }
 }

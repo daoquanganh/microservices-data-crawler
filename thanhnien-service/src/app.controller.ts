@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Post } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Inject, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ClientProxy, Ctx, MessagePattern, RmqContext } from '@nestjs/microservices';
 import { Cron, CronExpression } from '@nestjs/schedule';
@@ -21,8 +21,9 @@ export class AppController {
   //endpoint for receiving message and return data to proxy
   @MessagePattern('thanhnien')
   async getData(): Promise<ArticleDto[]> {
-    const data = await this.appService.crawl()
-    
-    return data
+    return await this.appService.crawl().catch((e)=> {
+      console.log(e)
+      throw new HttpException(e, HttpStatus.BAD_REQUEST)
+    })
   }
 }
